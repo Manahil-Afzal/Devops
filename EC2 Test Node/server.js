@@ -20,6 +20,6 @@ app.get("/api", (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server is running on port 3000");
 });
