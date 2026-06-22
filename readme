@@ -1,20 +1,23 @@
 # 🚀 NODE.JS DEPLOYMENT ON AWS EC2 (UBUNTU + PM2 + NGINX)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+# 🧭 PROJECT OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧭 PROJECT OVERVIEW
+This project demonstrates how to deploy a **Node.js + Express application** on an **AWS EC2 Ubuntu server** using a traditional production setup.
 
-This project shows how to deploy a **Node.js + Express application** on an **AWS EC2 Ubuntu server** using a production-style setup:
-
+### 🔧 Technologies Used
 - Ubuntu Server
-- Node.js Runtime
+- Node.js
+- Express.js
 - PM2 Process Manager
 - Nginx Reverse Proxy
-- AWS Security Groups
+- AWS EC2 Security Groups
 
 ---
 
 # 🖥️ 1. CONNECT TO EC2 INSTANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 ssh -i "EC2.pem" ubuntu@<EC2-PUBLIC-IP>
@@ -23,6 +26,7 @@ ssh -i "EC2.pem" ubuntu@<EC2-PUBLIC-IP>
 ---
 
 # 📦 2. UPDATE SYSTEM PACKAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -31,13 +35,13 @@ sudo apt update && sudo apt upgrade -y
 ---
 
 # 🟢 3. INSTALL NODE.JS & NPM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 sudo apt install nodejs npm -y
 ```
 
-### Check versions
-
+### ✅ Check Versions
 ```bash
 node -v
 npm -v
@@ -46,6 +50,7 @@ npm -v
 ---
 
 # 📁 4. SETUP PROJECT DIRECTORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 mkdir Devops
@@ -53,7 +58,6 @@ cd Devops
 ```
 
 ### OR (Using Git)
-
 ```bash
 git clone <repo-url>
 cd <project-folder>
@@ -62,6 +66,7 @@ cd <project-folder>
 ---
 
 # 📦 5. INSTALL DEPENDENCIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 npm install
@@ -70,15 +75,14 @@ npm install
 ---
 
 # ⚙️ 6. CREATE EXPRESS SERVER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Create file
-
+### 📄 Create File
 ```bash
 nano server.js
 ```
 
-### Add this code
-
+### 💻 Add Code
 ```javascript
 const express = require("express");
 const app = express();
@@ -95,14 +99,14 @@ app.listen(3000, "0.0.0.0", () => {
 ---
 
 # 🚀 7. INSTALL PM2 (PROCESS MANAGER)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 sudo npm install -g pm2
 pm2 start server.js
 ```
 
-### Monitor app
-
+### 📊 Monitor Application
 ```bash
 pm2 list
 pm2 logs
@@ -111,13 +115,13 @@ pm2 logs
 ---
 
 # 🔥 8. INSTALL NGINX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 sudo apt install nginx -y
 ```
 
-### Check status
-
+### Check Status
 ```bash
 systemctl status nginx
 ```
@@ -125,13 +129,13 @@ systemctl status nginx
 ---
 
 # ⚙️ 9. CONFIGURE NGINX (REVERSE PROXY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 sudo nano /etc/nginx/sites-available/default
 ```
 
 ### Replace with:
-
 ```nginx
 location / {
     proxy_pass http://localhost:3000;
@@ -143,8 +147,7 @@ location / {
 }
 ```
 
-### Apply changes
-
+### Apply Changes
 ```bash
 sudo nginx -t
 sudo systemctl restart nginx
@@ -152,25 +155,25 @@ sudo systemctl restart nginx
 
 ---
 
-# 🌐 10. AWS SECURITY GROUP
+# 🌐 10. AWS SECURITY GROUP SETTINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| TYPE  | PORT | SOURCE |
-|------|------|--------|
-| SSH  | 22   | YOUR IP |
-| HTTP | 80   | 0.0.0.0/0 |
+| TYPE  | PORT | SOURCE     |
+|------|------|------------|
+| SSH  | 22   | YOUR IP    |
+| HTTP | 80   | 0.0.0.0/0  |
 
 ---
 
 # 🌍 11. ACCESS APPLICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ### Direct Node.js
-
 ```
 http://<EC2-IP>:3000
 ```
 
 ### Nginx (Recommended)
-
 ```
 http://<EC2-IP>
 ```
@@ -178,6 +181,7 @@ http://<EC2-IP>
 ---
 
 # 🔁 12. RESTART SERVICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 pm2 restart all
@@ -187,6 +191,7 @@ sudo systemctl restart nginx
 ---
 
 # 📊 13. MONITORING COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 pm2 logs
@@ -197,6 +202,7 @@ sudo ss -tulpn | grep 3000
 ---
 
 # 📁 14. BASIC LINUX COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 pwd
@@ -211,6 +217,7 @@ clear
 ---
 
 # 📄 15. FILE OPERATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
 touch file.txt
@@ -223,24 +230,26 @@ mv file1 file2
 ---
 
 # 🧠 ARCHITECTURE FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```
-Browser → Nginx (80) → Node.js (3000) → PM2 Process
+Browser → Nginx (Port 80) → Node.js (Port 3000) → PM2
 ```
 
 ---
 
-# ⚠️ COMMON ISSUES
+# ⚠️ COMMON ISSUES & FIXES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ❌ Site not opening
-Check AWS Security Group (Port 80 / 3000)
+### ❌ Site not opening
+- Check AWS Security Group (port 80 / 3000)
 
-## ❌ Nginx error
+### ❌ Nginx error
 ```bash
 sudo nginx -t
 ```
 
-## ❌ Node not running
+### ❌ Node not running
 ```bash
 pm2 list
 ```
@@ -248,10 +257,10 @@ pm2 list
 ---
 
 # 🏁 FINAL RESULT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✔ Ubuntu Server  
 ✔ Node.js Backend  
 ✔ PM2 Process Manager  
 ✔ Nginx Reverse Proxy  
-✔ AWS EC2 Deployment  
-```
+✔ AWS EC2 Deployment Completed Successfully 🚀
