@@ -1,0 +1,141 @@
+🚀 Node.js Deployment on AWS EC2 (Ubuntu + PM2 + Nginx)
+
+This guide explains how to deploy a Node.js + Express application on an AWS EC2 Ubuntu server using traditional Linux server setup practices.
+
+🖥️ Prerequisites
+AWS EC2 instance (Ubuntu)
+SSH access (.pem file)
+Basic Linux knowledge
+Git repository (optional)
+📦 1. Connect to EC2 Server
+ssh -i "EC2.pem" ubuntu@<your-ec2-public-ip>
+📦 2. Update System
+sudo apt update && sudo apt upgrade -y
+🟢 3. Install Node.js & npm
+
+Install Node.js on Ubuntu server:
+
+sudo apt install nodejs npm -y
+Check versions:
+node -v
+npm -v
+📁 4. Setup Project Directory
+mkdir Devops
+cd Devops
+If using Git:
+git clone <repo-url>
+cd <project-folder>
+📦 5. Install Dependencies
+
+Inside your project folder:
+
+npm install
+⚙️ 6. Create Express Server
+
+Create a file:
+
+nano server.js
+Add this code:
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+    res.send("Server running on EC2");
+});
+
+app.listen(3000, "0.0.0.0", () => {
+    console.log("Server running on port 3000");
+});
+🚀 7. Install PM2 (Process Manager)
+
+PM2
+
+sudo npm install -g pm2
+Start application:
+pm2 start server.js
+Monitor:
+pm2 list
+pm2 logs
+🔥 8. Install Nginx
+
+Nginx
+
+sudo apt install nginx -y
+Check status:
+systemctl status nginx
+⚙️ 9. Configure Nginx Reverse Proxy
+
+Edit configuration:
+
+sudo nano /etc/nginx/sites-available/default
+Replace location / block:
+location / {
+    proxy_pass http://localhost:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+Test config:
+sudo nginx -t
+Restart Nginx:
+sudo systemctl restart nginx
+🌐 10. AWS Security Group Setup
+
+AWS Security Groups
+
+Open these ports:
+
+Type	Port	Source
+SSH	22	Your IP
+HTTP	80	0.0.0.0/0
+Custom TCP	3000	0.0.0.0/0 (optional)
+🌍 11. Access Application
+Direct Node.js access:
+http://<your-ec2-ip>:3000
+Nginx (Recommended):
+http://<your-ec2-ip>
+🔁 12. Restart Services
+pm2 restart all
+sudo systemctl restart nginx
+📊 13. Monitoring Commands
+pm2 logs
+pm2 list
+sudo ss -tulpn | grep 3000
+📁 14. Basic Linux Commands
+pwd                 # current directory
+ls                  # list files
+ls -la              # detailed list
+cd /                # root directory
+cd ~                # home directory
+cd folder_name      # enter folder
+mkdir folder_name   # create folder
+rmdir folder_name   # remove folder
+rm file.txt         # delete file
+rm -rf folder       # force delete folder
+clear               # clear terminal
+📄 15. File Operations
+touch file.txt      # create file
+nano file.txt       # edit file
+cat file.txt        # view file
+cp file1 file2      # copy file
+mv file1 file2      # move/rename file
+🧠 Architecture Flow
+Browser → Nginx (Port 80) → Node.js (Port 3000) → PM2 Process Manager
+⚠️ Common Issues
+1. Site not opening
+Check AWS Security Group ports (80 / 3000)
+2. Nginx error
+sudo nginx -t
+3. Node not running
+pm2 list
+🏁 Final Result
+
+A production-ready deployment using traditional server architecture:
+
+✔ Ubuntu
+✔ Node.js
+✔ PM2
+✔ Nginx
+✔ Amazon Web Services
