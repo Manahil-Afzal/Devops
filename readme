@@ -185,7 +185,9 @@ http://<EC2-IP>
 
 ```bash
 pm2 restart all
-sudo systemctl restart nginx
+sudo systemctl restart nginx 
+ ## From Local machine to Nginx Server
+ssh -i ~/EC2.pem ubuntu@13.48.195.62
 ```
 
 ---
@@ -198,6 +200,8 @@ pm2 logs
 pm2 list
 sudo ss -tulpn | grep 3000
 ```
+
+
 
 ---
 
